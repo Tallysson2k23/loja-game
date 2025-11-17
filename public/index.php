@@ -207,7 +207,7 @@ body {
 <?php endif; ?>
 
     <h2>Loja de Recompensas</h2>
-    <input type="text" placeholder="Pesquisar usuário">
+    <!-- <input type="text" placeholder="Pesquisar usuário"> -->
 
     <div class="points-box">
       <h3>Pontos disponíveis</h3>
@@ -215,8 +215,10 @@ body {
       <p style="font-size:0.8rem;color:#777;">Pontos de <?= htmlspecialchars($user) ?></p>
     </div>
 
-    <button class="btn">Histórico</button>
-    <button class="btn">Reset</button>
+<!-- BOTOES HISTORICO E RESET DESATIVADOS -->
+
+    <!-- <button class="btn">Histórico</button>
+    <button class="btn">Reset</button> -->
 
     <hr style="width:100%;border:0;border-top:1px solid #ddd;">
 
@@ -235,14 +237,37 @@ body {
   <div class="content">
     <div class="header">
       <h1>Produtos</h1>
-      <input type="text" placeholder="Pesquisar produtos">
+      <input type="text" id="buscarProduto" placeholder="Pesquisar produtos">
+
     </div>
 
 <?php if (!empty($msg)): ?>
-  <div id="msg" style="margin-bottom:12px;color:#155724;background:#d4edda;padding:10px;border-radius:8px;">
-    <?= htmlspecialchars($msg) ?>
-  </div>
+    <?php
+        $tipo = $_SESSION['msg_tipo'] ?? 'sucesso';
+
+        if ($tipo === 'erro') {
+            // ERRO → texto vermelho, sem fundo
+            $estilo = "color:red;font-weight:bold;padding:10px;";
+        } else {
+            // SUCESSO → fundo verde com sombra (como antes)
+            $estilo = "
+                color:#155724;
+                background:#d4edda;
+                padding:10px;
+                border-radius:8px;
+                box-shadow:0 3px 6px rgba(0,0,0,0.15);
+                font-weight:bold;
+            ";
+        }
+    ?>
+
+    <div id="msg" style="margin-bottom:12px; <?= $estilo ?>">
+        <?= htmlspecialchars($msg) ?>
+    </div>
+
+<?php unset($_SESSION['msg'], $_SESSION['msg_tipo']); ?>
 <?php endif; ?>
+
 
 
     <div class="products">
@@ -300,6 +325,26 @@ function confirmarResgate(produto, custo) {
             setTimeout(() => msg.remove(), 600); // remove depois do fade
         }
     }, 3000);
+</script>
+
+
+<script>
+// PESQUISA DE PRODUTOS EM TEMPO REAL
+document.getElementById("buscarProduto").addEventListener("input", function () {
+    let termo = this.value.toLowerCase();
+    let produtos = document.querySelectorAll(".product");
+
+    produtos.forEach(prod => {
+        let nome = prod.querySelector("h3").innerText.toLowerCase();
+        let desc = prod.querySelector("p").innerText.toLowerCase();
+
+        if (nome.includes(termo) || desc.includes(termo)) {
+            prod.style.display = "block";
+        } else {
+            prod.style.display = "none";
+        }
+    });
+});
 </script>
 
 </body>

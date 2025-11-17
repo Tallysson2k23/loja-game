@@ -13,6 +13,7 @@ $user = $_SESSION['user'];
 // Verifica se dados vieram do formulário
 if (empty($_POST['produto']) || empty($_POST['custo'])) {
     $_SESSION['msg'] = "Requisição inválida.";
+    $_SESSION['msg_tipo'] = "erro";
     header("Location: loja.php");
     exit;
 }
@@ -30,6 +31,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$row) {
     $_SESSION['msg'] = "Usuário não encontrado.";
+    $_SESSION['msg_tipo'] = "erro";
     header("Location: loja.php");
     exit;
 }
@@ -40,7 +42,8 @@ $pontosAtual = (int) $row['pontos'];
 // 2) Verificar se tem pontos suficientes
 // ----------------------------------------------------------
 if ($pontosAtual < $custo) {
-    $_SESSION['msg'] = "Você não tem pontos suficientes para resgatar este item.";
+    $_SESSION['msg'] = "❌ Você não tem pontos suficientes para resgatar este item.";
+    $_SESSION['msg_tipo'] = "erro";
     header("Location: loja.php");
     exit;
 }
@@ -69,9 +72,10 @@ $update->bindValue(':nome', $user);
 $update->execute();
 
 // ----------------------------------------------------------
-// 5) Mensagem de retorno
+// 5) Mensagem de retorno (sucesso)
 // ----------------------------------------------------------
 $_SESSION['msg'] = "🎉 Resgate realizado com sucesso! Você recebeu: $produto";
+$_SESSION['msg_tipo'] = "sucesso";
 
 header("Location: loja.php");
 exit;
