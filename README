@@ -1,0 +1,9 @@
+-- dar  pontos ao usuário ADMIN
+UPDATE usuarios SET pontos = 1000 WHERE nome = 'TESTE';
+
+-- aumentar  pontos
+UPDATE usuarios SET pontos = pontos + 734 WHERE nome = 'RAFAEL HENRIQUE';
+
+
+-- para verfificar os pontos via terminal 
+SELECT nome, pontos FROM usuarios;
